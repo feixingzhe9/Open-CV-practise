@@ -12,7 +12,7 @@ int main()
     if(!src_image.data) {cout << "fail to load image" << endl;   return 0;}  
     imshow("origin picture",src_image);  
 
-    //red HSV range  
+    //red HSV range  H: 156~180 || 0~10     S:43~255    V:46~255
     int iLowH = 156;    
     int iHighH = 180;    
 
@@ -28,10 +28,12 @@ int main()
     cvtColor(src_image, hsv_image,COLOR_BGR2HSV);//RGB to HSV
     inRange(hsv_image,Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV),threashold_image);
 #if 1
-    Mat element = getStructuringElement(MORPH_RECT, Size(15, 15));
+    Mat element = getStructuringElement(MORPH_RECT, Size(35, 35));
     //morphologyEx(src_image, src_image, MORPH_TOPHAT, element);
+    morphologyEx(src_image, src_image, MORPH_OPEN, element);
+    //morphologyEx(src_image, src_image, MORPH_CLOSE, element);
     //morphologyEx(src_image, src_image, MORPH_BLACKHAT, element);
-    //imshow("origin tophat picture",src_image);  
+    imshow("origin tophat picture",src_image);  
     morphologyEx(threashold_image, threashold_image, MORPH_CLOSE, element);//闭操作 (连接一些连通域)
     element = getStructuringElement(MORPH_RECT, Size(3, 3));
     morphologyEx(threashold_image, threashold_image, MORPH_OPEN, element);
