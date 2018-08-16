@@ -25,10 +25,14 @@ int main()
     Mat threashold_image;
     Mat threashold_image_2;
 
+    Mat image_3;
+    Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));
+    morphologyEx(src_image, image_3, CV_MOP_GRADIENT, element);//闭操作 (连接一些连通域)
+    imshow("MOP_GRADIENT",image_3);
+
     cvtColor(src_image, hsv_image,COLOR_BGR2HSV);//RGB to HSV
     inRange(hsv_image,Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV),threashold_image);
 #if 1
-    Mat element = getStructuringElement(MORPH_RECT, Size(35, 35));
     //morphologyEx(src_image, src_image, MORPH_TOPHAT, element);
     morphologyEx(src_image, src_image, MORPH_OPEN, element);
     //morphologyEx(src_image, src_image, MORPH_CLOSE, element);
@@ -61,8 +65,15 @@ int main()
     }
     imshow("HSV picture", hsv_image);  
     imshow("threashold picture", threashold_image);  
-
     imwrite("1.jpg", threashold_image);  
+    
+    Mat erode_image;
+    Mat dilate_image;
+    element_2 = getStructuringElement(MORPH_RECT, Size(3, 3));
+    erode(threashold_image,erode_image,element_2);
+    dilate(threashold_image,dilate_image,element_2);
+    imshow("erode_picture",erode_image);
+    imshow("dilate_picture",dilate_image);
     waitKey(0);  
     return 0;  
 }
